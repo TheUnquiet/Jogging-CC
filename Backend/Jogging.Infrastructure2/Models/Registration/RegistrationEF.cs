@@ -17,11 +17,15 @@ public partial class RegistrationEF
     [Column(TypeName = "text")]
     public string? RunTime { get; set; }
 
-    public int? CompetitionPerCategoryId { get; set; }
+    public bool? Paid { get; set; }
 
-    public bool Paid { get; set; }
+    public int CompetitionPerCategoryId { get; set; }
 
-    public int? PersonId { get; set; }
+    public int PersonId { get; set; }
 
-    public int? CompetitionId { get; set; }
+    public virtual PersonEF PersonEF { get; set; }
+
+    public int CompetitionId { get; set; }
+
+    public virtual CompetitionEF CompetitionEF { get; set; }
 }

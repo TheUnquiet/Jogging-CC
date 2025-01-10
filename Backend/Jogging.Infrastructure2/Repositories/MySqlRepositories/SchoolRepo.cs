@@ -6,7 +6,7 @@ using Jogging.Infrastructure2.Data;
 using Jogging.Infrastructure2.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Jogging.Infrastructure.Repositories.SupabaseRepos;
+namespace Jogging.Infrastructure2.Repositories.MySqlRepositories;
 
 public class SchoolRepo : IGenericRepo<SchoolDom>
 {
@@ -31,14 +31,13 @@ public class SchoolRepo : IGenericRepo<SchoolDom>
         }
     }
 
-    public async Task<SchoolDom> GetByIdAsync(int schoolId)
-    {
-        try
-        {
-            return _mapper.Map<SchoolDom>(await _context.Schools.Where(s => s.Id == schoolId));
-        }
-        catch (Exception ex)
-        {
+    public async Task<SchoolDom> GetByIdAsync(int schoolId) {
+        try {
+            var school = await _context.Schools
+                .FirstOrDefaultAsync(s => s.Id == schoolId);
+
+            return _mapper.Map<SchoolDom>(school);
+        } catch (Exception ex) {
             throw new Exception($"GetByIdAsync: {ex.Message}");
         }
     }

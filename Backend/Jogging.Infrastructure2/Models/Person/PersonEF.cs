@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Jogging.Infrastructure2.Models.Club;
 
 namespace Jogging.Infrastructure2.Models;
 
@@ -20,6 +21,8 @@ public partial class PersonEF
 
     public DateOnly BirthDate { get; set; }
 
+    public string PasswordHash { get; set; }
+
     [Column("IBANNumber")]
     [StringLength(30)]
     public string? Ibannumber { get; set; }
@@ -35,4 +38,14 @@ public partial class PersonEF
 
     [StringLength(255)]
     public string? Email { get; set; }
+
+    public int? ClubId { get; set; }
+
+    public ClubEF? Club { get; set; }
+
+    public string ConfirmationToken { get; set; }
+
+    public string PasswordResetToken { get; set; }
+
+    public bool IsEmailConfirmed { get; set; }
 }

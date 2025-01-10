@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Jogging.Infrastructure2.Models;
+using Jogging.Infrastructure2.Models.Club;
 using Jogging.Infrastructure2.Models.Account;
 using Jogging.Infrastructure2.Views;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ public partial class JoggingCcContext : DbContext
 
     public virtual DbSet<SchoolEF> Schools { get; set; }
 
-    public virtual DbSet<Club> Clubs { get; set; }
+    public virtual DbSet<ClubEF> Clubs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseMySql("server=mysql-28d63a87-linabencheikh-nt.f.aivencloud.com;port=21290;database=Jogging_CC;uid=avnadmin;pwd=AVNS_vEpmT_7ygfJjKSPWezk", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
@@ -107,7 +108,7 @@ public partial class JoggingCcContext : DbContext
             entity.HasKey(e => e.Id).HasName("PRIMARY");
         });
 
-        modelBuilder.Entity<Club>(entity =>
+        modelBuilder.Entity<ClubEF>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
