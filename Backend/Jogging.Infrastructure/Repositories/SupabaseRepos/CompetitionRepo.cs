@@ -45,6 +45,7 @@ namespace Jogging.Infrastructure.Repositories.SupabaseRepos
 
             return _mapper.Map<List<CompetitionDom>>(competitions.Models);
         }
+
         public async Task<List<CompetitionDom>> GetAllWithSearchValuesAsync(string? competitionName, DateOnly? startDate, DateOnly? endDate)
         {
             var filters = new List<IPostgrestQueryFilter>();
@@ -79,6 +80,7 @@ namespace Jogging.Infrastructure.Repositories.SupabaseRepos
 
             return _mapper.Map<List<CompetitionDom>>(competitions.Models);
         }
+
         public async Task<List<CompetitionDom>> GetAllActiveAsync()
         {
             var competitions = await _client
@@ -94,6 +96,7 @@ namespace Jogging.Infrastructure.Repositories.SupabaseRepos
 
             return _mapper.Map<List<CompetitionDom>>(competitions.Models);
         }
+
         public async Task<List<CompetitionDom>> GetAllActiveWithSearchValuesAsync(string? competitionName, DateOnly? startDate, DateOnly? endDate)
         {
             var competitions = await _client

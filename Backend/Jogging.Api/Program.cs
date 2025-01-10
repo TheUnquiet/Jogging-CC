@@ -40,7 +40,8 @@ internal class Program
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddControllers();
             var cs = builder.Configuration.GetConnectionString("MySql");
-            builder.Services.AddDbContext<JoggingCcContext>(options => options.UseMySql(cs), ServerVersion.Parse("8.0.30-mysql"));
+            builder.Services.AddDbContext<JoggingCcContext>(options =>
+                options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
             builder.Services.AddMultiSafepay(configuration);
             builder.Services.AddSmtpEmailClient(configuration);
             builder.Services.AddInterfaces();

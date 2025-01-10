@@ -30,7 +30,6 @@ public class CompetitionResultCompetitionPerCategory: BaseModel
     [Column("GunTime")] 
     public DateTime? GunTime { get; set; }
 
-        
     [Reference(typeof(SimpleAgeCategory), ReferenceAttribute.JoinType.Left, foreignKey:"AgeCategoryId")]
     public SimpleAgeCategory AgeCategory { get; set; }
 }

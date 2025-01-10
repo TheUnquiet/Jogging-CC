@@ -1,6 +1,5 @@
 ﻿using Jogging.Infrastructure.Models.DatabaseModels.CompetitionPerCategory;
 using Jogging.Infrastructure.Models.DatabaseModels.Person;
-using Jogging.Infrastructure.Models.DatabaseModels.Club;
 using Postgrest.Attributes;
 using Postgrest.Models;
 
@@ -35,7 +34,4 @@ public class ExtendedCompetitionResult : BaseModel
 
     [Reference(typeof(AdvancedPerson), ReferenceAttribute.JoinType.Left)]
     public AdvancedPerson Person { get; set; }
-
-    [Reference(typeof(ExtendedClub), ReferenceAttribute.JoinType.Left)]
-    public ExtendedClub Club { get; set; }
 }

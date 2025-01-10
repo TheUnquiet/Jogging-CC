@@ -1,6 +1,7 @@
 ﻿using Jogging.Domain.Models;
 using Jogging.Infrastructure.Models.DatabaseModels.Address;
 using Jogging.Infrastructure.Models.DatabaseModels.AgeCategory;
+using Jogging.Infrastructure.Models.DatabaseModels.Club;
 using Jogging.Infrastructure.Models.DatabaseModels.Competition;
 using Jogging.Infrastructure.Models.DatabaseModels.CompetitionPerCategory;
 using Jogging.Infrastructure.Models.DatabaseModels.CompetitionResult;
@@ -12,11 +13,13 @@ using Jogging.Infrastructure.Models.SearchModels.Account;
 using Jogging.Infrastructure.Models.SearchModels.Person;
 using Jogging.Infrastructure.Models.SearchModels.Registration;
 using Jogging.Infrastructure.Models.SearchModels.Result;
+using Jogging.Infrastructure2.Models;
 using Jogging.Rest.DTOs.AccountDtos.ConfirmDtos;
 using Jogging.Rest.DTOs.AccountDtos.PasswordDtos;
 using Jogging.Rest.DTOs.AccountDtos.ProfileDtos;
 using Jogging.Rest.DTOs.AddressDtos;
 using Jogging.Rest.DTOs.AgeCategoryDtos;
+using Jogging.Rest.DTOs.ClubDtos;
 using Jogging.Rest.DTOs.CompetitionDtos;
 using Jogging.Rest.DTOs.CompetitionPerCategoryDtos;
 using Jogging.Rest.DTOs.PaymentDtos;
@@ -62,10 +65,16 @@ namespace Jogging.Api.Configuration
             CreateMap<ExtendedRegistration, RegistrationDom>().ReverseMap();
             CreateMap<ExtendedRegistrationSearchByPerson, RegistrationDom>().ReverseMap();
             CreateMap<PersonRegistration, RegistrationDom>().ReverseMap();
+            CreateMap<RegistrationDom, RegistrationEF>().ReverseMap();
 
             CreateMap<SimpleAgeCategory, AgeCategoryDom>().ReverseMap();
 
             CreateMap<ExtendedRegistration, RegistrationResponseDTO>().ReverseMap();
+
+            CreateMap<SimpleClub, ClubDom>().ReverseMap();
+            CreateMap<ExtendedClub, ClubDom>().ReverseMap();
+            CreateMap<ClubDom, ClubResponseDTO>().ReverseMap();
+            CreateMap<ClubRequestDTO, ClubDom>().ReverseMap();
 
             // DTO MAPPING
             CreateMap<ConfirmTokenDto, ConfirmTokenDom>().ReverseMap();

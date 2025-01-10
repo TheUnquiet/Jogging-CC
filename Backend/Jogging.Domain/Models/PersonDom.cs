@@ -46,7 +46,10 @@ namespace Jogging.Domain.Models
         public ProfileDom? Profile { get; set; }
         
         public string? Email { get; set; }
-        
+
+        public int? ClubId { get; set; }
+        public ClubDom? Club { get; set; }
+
         [JsonIgnore]
         public int Age
         {

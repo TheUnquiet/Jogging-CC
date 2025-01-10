@@ -2,6 +2,7 @@
 using Jogging.Infrastructure.Models.DatabaseModels.Account;
 using Jogging.Infrastructure.Models.DatabaseModels.Address;
 using Jogging.Infrastructure.Models.DatabaseModels.School;
+using Jogging.Infrastructure.Models.DatabaseModels.Club;
 using Postgrest.Attributes;
 using Postgrest.Models;
 
@@ -44,6 +45,9 @@ namespace Jogging.Infrastructure.Models.DatabaseModels.Person
         [Column("Gender")]
         public Char Gender { get; set; }
 
+        [Column("LoopClubId")]
+        public int? LoopClubId { get; set; }
+
         [Reference(typeof(SimpleAddress), ReferenceAttribute.JoinType.Inner)]
         public SimpleAddress Address { get; set; }
         
@@ -52,5 +56,8 @@ namespace Jogging.Infrastructure.Models.DatabaseModels.Person
         
         [Reference(typeof(SimpleSchool), ReferenceAttribute.JoinType.Left)]
         public SimpleSchool? School { get; set; }
+
+        [Reference(typeof(SimpleClub), ReferenceAttribute.JoinType.Left)]
+        public SimpleClub? Club { get; set; }
     }
 }
