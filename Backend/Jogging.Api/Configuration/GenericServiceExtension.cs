@@ -1,6 +1,5 @@
 ﻿using Jogging.Domain.DomainManagers;
 using Jogging.Domain.Helpers;
-using Jogging.Domain.Interfaces;
 using Jogging.Domain.Interfaces.RepositoryInterfaces;
 using Jogging.Domain.Interfaces.ServiceInterfaces;
 using Jogging.Domain.Models;
@@ -34,7 +33,6 @@ namespace Jogging.Api.Configuration
             services.AddScoped<PersonManager>();
             services.AddScoped<AuthManager>();
             services.AddScoped<CompetitionManager>();
-            services.AddScoped<AddressManager>();
             services.AddScoped<RankingManager>();
             services.AddScoped<SchoolManager>();
             services.AddScoped<RegistrationManager>();

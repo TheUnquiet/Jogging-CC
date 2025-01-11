@@ -10,12 +10,12 @@
         <Folder Include="Seeders\"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="supabase-csharp" Version="0.16.2"/>
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Jogging.Infrastructure\Jogging.Infrastructure.csproj"/>
+	<ItemGroup>
+        <ProjectReference Include="..\Jogging.Infrastructure2\Jogging.Infrastructure2.csproj"/>
     </ItemGroup>
 
 </Project>

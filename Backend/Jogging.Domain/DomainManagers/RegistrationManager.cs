@@ -105,7 +105,7 @@ namespace Jogging.Domain.DomainManagers
             AuthenticationValidator.ValidateEmailInput(email);
 
             await _authManager.CheckDuplicateEmailAddressAsync(email);
-            PersonDom newPerson = await _authManager.CreateNewPersonAccountAsync(email, null, personDom, false);
+            PersonDom newPerson = await _authManager.RegisterUserAsync(email, null, personDom, false);
             var registration = await _registrationRepo.SignInToContestAsync(competitionId, newPerson, distanceName);
             await _authManager.ResetUserConfirmToken(email);
             string passwordResetToken = await _authManager.ResetUserPasswordToken(email);

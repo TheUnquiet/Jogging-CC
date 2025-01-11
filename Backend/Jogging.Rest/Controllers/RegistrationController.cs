@@ -198,16 +198,15 @@ public class RegistrationController : ControllerBaseExtension
 
     [HttpDelete("private/{registrationId}", Name = nameof(DeleteRegistrationAsync))]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<string>> DeleteRegistrationAsync(int registrationId)
-    {
-        try
-        {
+    public async Task<ActionResult<string>> DeleteRegistrationAsync(int registrationId) {
+        try {
             await _registrationManager.DeleteUserRegistration(registrationId);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
+            return Ok("Registration successfully deleted.");
+        } catch (RegistrationNotFoundException) {
+            return NotFound("The registration with the specified ID was not found.");
+        } catch (Exception ex) {
+            _logger.LogError($"Error occurred while deleting registration ID {registrationId}: {ex.Message}");
+            return InternalServerError(ex, _logger);
         }
     }
 

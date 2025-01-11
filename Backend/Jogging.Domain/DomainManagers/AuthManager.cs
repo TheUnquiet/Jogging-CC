@@ -29,7 +29,6 @@ public class AuthManager {
     public async Task<string> SignUpAsync(string email, string? password) {
         AuthenticationValidator.ValidateEmailInput(email);
 
-        // New validation step for password before attempting sign-up
         if (string.IsNullOrEmpty(password) || password.Length < 6) {
             throw new ArgumentException("Password must be at least 6 characters long.");
         }
@@ -39,8 +38,7 @@ public class AuthManager {
         return await _authRepo.SignUpAsync(email, password);
     }
 
-    public async Task<PersonDom> CreateNewPersonAccountAsync(string email, string? password, PersonDom signedUpPersonDom, bool sendConfirmEmail) {
-        // Refined validation for email and password before account creation
+    public async Task<PersonDom> RegisterUserAsync(string email, string? password, PersonDom signedUpPersonDom, bool sendConfirmEmail) {
         if (string.IsNullOrEmpty(password)) {
             throw new ArgumentException("Password cannot be empty.");
         }
@@ -50,13 +48,11 @@ public class AuthManager {
         signedUpPersonDom.Email = email;
         signedUpPersonDom.UserId = userId;
 
-        // Address validation (assuming AddressDom is validated on creation)
         AddressValidator.ValidateCity(signedUpPersonDom.Address.City);
         PersonValidator.ValidatePersonRequest(signedUpPersonDom);
 
         var person = await _personManager.CreatePersonAsync(signedUpPersonDom);
 
-        // Send confirmation email if requested
         if (sendConfirmEmail) {
             string confirmToken = await ResetUserConfirmToken(email);
             _emailManager.SendConfirmEmail(email, confirmToken, person);
