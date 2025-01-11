@@ -39,15 +39,17 @@ namespace Jogging.Rest.Controllers {
         private readonly ClubManager _clubManager;
         private readonly IMapper _mapper;
         private readonly ILogger<ClubController> _logger;
+        private readonly BlobStorageController _blobController;
 
         #endregion Props
 
         #region CTor
 
-        public ClubController(ClubManager clubManager, IMapper mapper, ILogger<ClubController> logger) {
+        public ClubController(ClubManager clubManager, IMapper mapper, ILogger<ClubController> logger, BlobStorageController controller) {
             _clubManager = clubManager;
             _mapper = mapper;
             _logger = logger;
+            _blobController = controller;
         }
 
         #endregion CTor
@@ -90,11 +92,23 @@ namespace Jogging.Rest.Controllers {
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ClubResponseDTO>> CreateClub([FromBody] ClubRequestDTO clubRequest) {
-            try {
+        public async Task<ActionResult<ClubResponseDTO>> CreateClub([FromForm] ClubRequestDTO clubRequest)
+        {
+            try
+            {
                 var createdClub = await _clubManager.CreateAsync(_mapper.Map<ClubDom>(clubRequest));
+
+                // Upload the logo image if provided
+                if (clubRequest.Logo != null)
+                {
+                    await _blobController.Upload(clubRequest.Logo);
+                    createdClub.Logo = $"https://nieuwetechclubs.blob.core.windows.net/clubs/{clubRequest.Logo.FileName}";
+                }
+
                 return CreatedAtAction(nameof(Get), new { clubId = createdClub.Id }, _mapper.Map<ClubResponseDTO>(createdClub));
-            } catch (Exception exception) {
+            }
+            catch (Exception exception)
+            {
                 _logger.LogError(exception, "An error occurred in Create.");
                 return InternalServerError(exception, _logger);
             }

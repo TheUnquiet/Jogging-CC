@@ -1,4 +1,5 @@
-﻿using Jogging.Api.Configuration;
+﻿using Azure.Storage.Blobs;
+using Jogging.Api.Configuration;
 using Jogging.Domain.Configuration;
 using Jogging.Domain.Helpers;
 using Jogging.Domain.Interfaces.RepositoryInterfaces;
@@ -36,7 +37,7 @@ internal class Program
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddSingleton<CustomMemoryCache>();
-            // Repositories
+            builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.GetConnectionString("StorageAccount")));
             builder.Services.AddScoped<IResultRepo, ResultRepo>();
 
             builder.Services.AddMemoryCache();
