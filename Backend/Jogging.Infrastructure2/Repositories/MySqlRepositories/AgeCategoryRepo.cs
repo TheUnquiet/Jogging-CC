@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
 
-    public class AgeCategoryRepository : IAgeCategoryRepo {
+    public class AgeCategoryRepo : IAgeCategoryRepo {
         private readonly JoggingCcContext _context;
         private readonly IMapper _mapper;
 
-        public AgeCategoryRepository(JoggingCcContext context, IMapper mapper) {
+        public AgeCategoryRepo(JoggingCcContext context, IMapper mapper) {
             _context = context;
             _mapper = mapper;
         }

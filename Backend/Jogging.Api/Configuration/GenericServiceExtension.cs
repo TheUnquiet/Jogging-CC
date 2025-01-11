@@ -5,7 +5,7 @@ using Jogging.Domain.Interfaces.RepositoryInterfaces;
 using Jogging.Domain.Interfaces.ServiceInterfaces;
 using Jogging.Domain.Models;
 using Jogging.Domain.Services;
-using Jogging.Infrastructure.Repositories.SupabaseRepos;
+using Jogging.Infrastructure2.Repositories.MySqlRepositories;
 
 namespace Jogging.Api.Configuration
 {

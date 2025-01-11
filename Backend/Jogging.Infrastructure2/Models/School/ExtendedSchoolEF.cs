@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Jogging.Infrastructure.Models.DatabaseModels.School;
 
 [Table("School")]
-public class ExtendedSchool
+public class ExtendedSchoolEF
 {
     [Key]
     public int Id { get; set; }
@@ -29,7 +29,7 @@ public class ExtendedSchool
 
     public override bool Equals(object? obj)
     {
-        if (!(obj is ExtendedSchool other))
+        if (!(obj is ExtendedSchoolEF other))
             return false;
 
         return Name == other.Name;

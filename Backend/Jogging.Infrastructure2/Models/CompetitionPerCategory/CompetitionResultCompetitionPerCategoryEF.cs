@@ -1,17 +1,15 @@
-﻿using Postgrest.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Jogging.Infrastructure.Models.DatabaseModels.Registration;
 
 namespace Jogging.Infrastructure2.Models.CompetitionPerCategory
 {
     [Table("CompetitionPerCategory")]
-    public class ExtendedCompetitionPerCategory
+    public class CompetitionResultCompetitionPerCategoryEF
     {
         [Key]
         public int Id { get; set; }
@@ -24,7 +22,7 @@ namespace Jogging.Infrastructure2.Models.CompetitionPerCategory
         public float DistanceInKm { get; set; }
 
         [Column("Gender")]
-        public char Gender { get; set; }
+        public string Gender { get; set; }
 
         [Column("AgeCategoryId")]
         public int AgeCategoryId { get; set; }
@@ -35,6 +33,7 @@ namespace Jogging.Infrastructure2.Models.CompetitionPerCategory
         [Column("GunTime")]
         public DateTime? GunTime { get; set; }
 
-        public virtual ICollection<ExtendedRegistration> Registrations { get; set; }
+        [ForeignKey("AgeCategoryId")]
+        public virtual AgeCategoryEF AgeCategory { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Jogging.Infrastructure2.Models.DatabaseModels.Person
 {
     [Table("Person")]
-    public class ExtendedPerson
+    public class ExtendedPersonEF
     {
         [Key]
         public int Id { get; set; }

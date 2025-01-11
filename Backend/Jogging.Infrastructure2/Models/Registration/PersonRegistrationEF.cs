@@ -1,12 +1,11 @@
 ﻿using Jogging.Infrastructure2.Models;
-using Jogging.Infrastructure2.Models.CompetitionPerCategory;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Jogging.Infrastructure.Models.DatabaseModels.Result;
+namespace Jogging.Infrastructure.Models.DatabaseModels.Registration;
 
 [Table("Registration")]
-public class ExtendedResult
+public class PersonRegistrationEF
 {
     [Key]
     public int Id { get; set; }
@@ -29,8 +28,8 @@ public class ExtendedResult
     [Column("PersonId")]
     public int PersonId { get; set; }
 
-    [ForeignKey("CompetitionPerCategoryId")]
-    public virtual CompetitionResultCompetitionPerCategory CompetitionPerCategory { get; set; }
+    [ForeignKey("PersonId")]
+    public virtual PersonEF Person { get; set; }
 
     [ForeignKey("CompetitionId")]
     public virtual CompetitionEF Competition { get; set; }

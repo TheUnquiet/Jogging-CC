@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
 
-    public class AddressRepository : IGenericRepo<AddressDom> {
+    public class AddressRepo : IGenericRepo<AddressDom> {
         private readonly JoggingCcContext _context;
         private readonly IMapper _mapper;
 
-        public AddressRepository(JoggingCcContext context, IMapper mapper) {
+        public AddressRepo(JoggingCcContext context, IMapper mapper) {
             _context = context;
             _mapper = mapper;
         }
