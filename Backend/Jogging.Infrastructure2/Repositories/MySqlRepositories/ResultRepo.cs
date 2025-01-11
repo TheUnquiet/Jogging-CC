@@ -4,16 +4,17 @@ using Jogging.Domain.Helpers;
 using Jogging.Domain.Interfaces.RepositoryInterfaces;
 using Jogging.Domain.Models;
 using Jogging.Infrastructure.Models.DatabaseModels.Result;
+using Jogging.Infrastructure2.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jogging.Infrastructure2.Repositories.MySqlRepositories;
 
 public class ResultRepo : IResultRepo {
-    private readonly DbContext _context;
+    private readonly JoggingCcContext _context;
     private readonly CustomMemoryCache _memoryCache;
     private readonly IMapper _mapper;
 
-    public ResultRepo(DbContext context, CustomMemoryCache memoryCache, IMapper mapper) {
+    public ResultRepo(JoggingCcContext context, CustomMemoryCache memoryCache, IMapper mapper) {
         _context = context;
         _memoryCache = memoryCache;
         _mapper = mapper;

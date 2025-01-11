@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace Jogging.Infrastructure2.Models.DatabaseModels.Competition;
 
 [Table("Competition")]
-public class ExtendedCompetition
+public class ExtendedCompetitionEF
 {
     [Key]
     public int Id { get; set; }
@@ -37,5 +37,5 @@ public class ExtendedCompetition
     [JsonIgnore]
     public Dictionary<string, float>? Distances { get; set; }
 
-    public virtual List<ExtendedCompetitionPerCategory>? CompetitionPerCategories { get; set; }
+    public virtual List<ExtendedCompetitionPerCategoryEF>? CompetitionPerCategories { get; set; }
 }

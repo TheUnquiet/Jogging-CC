@@ -10,7 +10,7 @@ using Jogging.Infrastructure.Models.DatabaseModels.Person;
 
 namespace Jogging.Infrastructure2.Models.Registration
 {
-    public class ExtendedRegistration
+    public class ExtendedRegistrationEF
     {
         [Key]
         public int Id { get; set; }
@@ -34,9 +34,9 @@ namespace Jogging.Infrastructure2.Models.Registration
         public int PersonId { get; set; }
 
         [ForeignKey("PersonId")]
-        public virtual AdvancedPerson Person { get; set; }
+        public virtual AdvancedPersonEF Person { get; set; }
 
         [ForeignKey("CompetitionPerCategoryId")]
-        public virtual CompetitionResultCompetitionPerCategory CompetitionPerCategory { get; set; }
+        public virtual CompetitionResultCompetitionPerCategoryEF CompetitionPerCategory { get; set; }
     }
 }

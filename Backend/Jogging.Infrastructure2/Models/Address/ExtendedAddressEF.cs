@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Jogging.Infrastructure2.Models.DatabaseModels.Address;
 
 [Table("Address")]
-public class ExtendedAddress
+public class ExtendedAddressEF
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -38,7 +38,7 @@ public class ExtendedAddress
 
     public override bool Equals(object? obj)
     {
-        if (obj is not ExtendedAddress other)
+        if (obj is not ExtendedAddressEF other)
             return false;
         return Street == other.Street &&
                HouseNumber == other.HouseNumber &&

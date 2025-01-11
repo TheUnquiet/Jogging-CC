@@ -191,15 +191,15 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
         }
 
 
-        private async Task<ExtendedPerson?> GetPersonById(int personId) {
+        private async Task<ExtendedPersonEF?> GetPersonById(int personId) {
             try {
-                return _mapper.Map<ExtendedPerson?>(await GetByIdAsync(personId));
+                return _mapper.Map<ExtendedPersonEF?>(await GetByIdAsync(personId));
             } catch (Exception ex) {
                 throw new Exception($"GetPersonById: {ex.Message}");
             }
         }
 
-        private async Task<bool> UpdateAddressIfNeeded(ExtendedPerson person, AddressDom updatedAddress) {
+        private async Task<bool> UpdateAddressIfNeeded(ExtendedPersonEF person, AddressDom updatedAddress) {
             var currentAddress = _mapper.Map<AddressDom>(person.Address);
 
             if (!currentAddress.Equals(updatedAddress)) {
@@ -212,7 +212,7 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
             return false;
         }
 
-        private async Task<bool> UpdateSchoolIfNeeded(ExtendedPerson person, SchoolDom? updatedPersonSchool) {
+        private async Task<bool> UpdateSchoolIfNeeded(ExtendedPersonEF person, SchoolDom? updatedPersonSchool) {
             var currentSchool = _mapper.Map<SchoolDom>(person.School);
 
             if (currentSchool != null && updatedPersonSchool == null) {

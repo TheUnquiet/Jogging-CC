@@ -1,6 +1,9 @@
 ﻿using Jogging.Api.Configuration;
 using Jogging.Domain.Configuration;
+using Jogging.Domain.Helpers;
+using Jogging.Domain.Interfaces.RepositoryInterfaces;
 using Jogging.Infrastructure2.Data;
+using Jogging.Infrastructure2.Repositories.MySqlRepositories;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Sinks.Discord;
@@ -31,6 +34,10 @@ internal class Program
             Log.Information("Starting web host");
 
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddSingleton<CustomMemoryCache>();
+            // Repositories
+            builder.Services.AddScoped<IResultRepo, ResultRepo>();
 
             builder.Services.AddMemoryCache();
 

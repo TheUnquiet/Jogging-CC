@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Jogging.Infrastructure.Models.DatabaseModels.Person;
 
 [Table("Person")]
-public class AdvancedPerson
+public class AdvancedPersonEF
 {
     [Key]
     public int Id { get; set; }

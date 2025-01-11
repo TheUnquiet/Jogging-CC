@@ -6,7 +6,7 @@ using Postgrest.Models;
 namespace Jogging.Infrastructure.Models.DatabaseModels.CompetitionResult;
 
 [Table("Registration")]
-public class ExtendedCompetitionResult : BaseModel
+public class ExtendedCompetitionResultEF : BaseModel
 {
     [PrimaryKey]
     public int Id { get; set; }
@@ -32,6 +32,6 @@ public class ExtendedCompetitionResult : BaseModel
     [Reference(typeof(CompetitionResultCompetitionPerCategory), ReferenceAttribute.JoinType.Inner)]
     public CompetitionResultCompetitionPerCategory CompetitionPerCategory { get; set; }
 
-    [Reference(typeof(AdvancedPerson), ReferenceAttribute.JoinType.Left)]
-    public AdvancedPerson Person { get; set; }
+    [Reference(typeof(AdvancedPersonEF), ReferenceAttribute.JoinType.Left)]
+    public AdvancedPersonEF Person { get; set; }
 }
