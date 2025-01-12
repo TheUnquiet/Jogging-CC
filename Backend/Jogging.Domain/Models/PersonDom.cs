@@ -12,6 +12,8 @@ namespace Jogging.Domain.Models
         private string _firstName;
         private string _lastName;
 
+        public string Password { get; set; }    
+
         [Required]
         [StringLength(50)]
         public string FirstName

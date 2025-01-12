@@ -35,22 +35,30 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
             return _mapper.Map<PersonDom>(user);
         }
 
-        public async Task<string> SignUpAsync(string email, string? password) {
+        public async Task<string> SignUpAsync(PersonDom personDom, string password) {
             if (string.IsNullOrEmpty(password)) {
                 password = Guid.NewGuid().ToString().Substring(0, 8);
             }
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 
-            var person = new PersonEF {
-                Email = email,
-                PasswordHash = passwordHash
+            var personEF = new PersonEF {
+                FirstName = personDom.FirstName,
+                LastName = personDom.LastName,
+                BirthDate = personDom.BirthDate,
+                Email = personDom.Email,
+                Ibannumber = personDom.IBANNumber,
+                Gender = personDom.Gender.ToString(),
+                PasswordHash = passwordHash,
+                SchoolId = personDom.SchoolId,
+                AddressId = personDom.AddressId,
+                ClubId = personDom.ClubId
             };
 
-            _dbContext.People.Add(person);
+            _dbContext.People.Add(personEF);
             await _dbContext.SaveChangesAsync();
 
-            return person.Id.ToString(); 
+            return personEF.Id.ToString();
         }
 
         public async Task ChangePassword(PasswordChangeDom passwordChangeInfo) {

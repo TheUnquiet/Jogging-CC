@@ -93,6 +93,8 @@ namespace Jogging.Rest.Controllers {
         public async Task<IActionResult> SignUpAsync([FromBody] SignUpRequestDTO signUpRequestDto) {
             try {
                 var personDom = _mapper.Map<PersonDom>(signUpRequestDto.Person);
+                personDom.Email = signUpRequestDto.Email;
+
                 await _authManager.RegisterUserAsync(signUpRequestDto.Email, signUpRequestDto.Password, personDom, sendConfirmEmail: true);
                 return Created();
             } catch (PasswordException exception) {
