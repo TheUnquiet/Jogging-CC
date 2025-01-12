@@ -9,7 +9,7 @@ public class CorsConfigurator
         options.AddPolicy("AllowAny",
             builder =>
             {
-                builder.WithOrigins("http://20.56.159.69:50545", "http://localhost:5173", "https://localhost:5173")
+                builder.WithOrigins("http://20.56.159.69:50545", "http://localhost:5173","http://localhost:5187")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
@@ -17,3 +17,4 @@ public class CorsConfigurator
             });
     }
 }
+

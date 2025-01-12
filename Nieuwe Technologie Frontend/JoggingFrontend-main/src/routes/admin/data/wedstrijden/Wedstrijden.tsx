@@ -19,7 +19,7 @@ export default function Wedstrijden() {
 
   const fetchActiveContests = useCallback(async () => {
     try {
-      const url = '/api/contests'; // Definieer de URL als een string
+      const url = '/api/competition'; // Definieer de URL als een string
       console.log('Fetching from URL:', url); // Log de URL
       const response = await fetch(url);
       let data = await response.json();
