@@ -8,6 +8,7 @@ using Jogging.Infrastructure2.Models;
 using Jogging.Infrastructure2.Models.DatabaseModels.Address;
 using Jogging.Infrastructure2.Models.DatabaseModels.Person;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
@@ -71,11 +72,15 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try {
+                if (newPersonDom == null) {
+                    throw new ArgumentNullException(nameof(newPersonDom), "The input cannot be null.");
+                }
+
                 var address = await _context.Addresses
                     .FirstOrDefaultAsync(a =>
                         a.Street == newPersonDom.Address.Street &&
                         a.City == newPersonDom.Address.City)
-                ?? _context.Addresses.Add(_mapper.Map<AddressEF>(newPersonDom.Address)).Entity;
+                    ?? _context.Addresses.Add(_mapper.Map<AddressEF>(newPersonDom.Address)).Entity;
 
                 SchoolDom? school = null;
 
@@ -105,8 +110,11 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
                 return _mapper.Map<PersonDom>(person);
             } catch (Exception ex) {
                 await transaction.RollbackAsync();
-                throw new Exception("Something went wrong", ex);
+                throw new Exception("An error occurred while adding the person.", ex);
+            } finally {
             }
+
+            throw new InvalidOperationException("An unexpected error occurred. The person could not be added.");
         }
 
         public async Task<(PersonDom, PersonDom, bool shouldSendEmail)> UpdateAsync(int personId, PersonDom updatedPerson) {
