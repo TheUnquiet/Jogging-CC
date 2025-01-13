@@ -44,7 +44,7 @@ internal class Program
             builder.Services.AddScoped<IResultRepo, ResultRepo>();
             builder.Services.AddScoped<IClubRepo, ClubRepo>();
             builder.Services.AddScoped<ClubManager>();
-            builder.Services.AddSingleton<BlobStorageController>();
+            builder.Services.AddSingleton<BlobStorageService>();
 
             builder.Services.AddMemoryCache();
 

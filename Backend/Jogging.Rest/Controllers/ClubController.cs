@@ -25,7 +25,7 @@ namespace Jogging.Rest.Controllers {
 
         #region CTor
 
-        public ClubController(ClubManager clubManager, IMapper mapper, ILogger<ClubController> logger, BlobStorageController blobController) {
+        public ClubController(ClubManager clubManager, IMapper mapper, ILogger<ClubController> logger, BlobStorageService blobController) {
             _clubManager = clubManager;
             _mapper = mapper;
             _logger = logger;
