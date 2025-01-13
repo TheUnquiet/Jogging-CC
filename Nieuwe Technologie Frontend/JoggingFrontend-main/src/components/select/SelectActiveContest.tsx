@@ -7,27 +7,30 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import {useEffect, useState} from 'react';
-import {fetchPublicCompetitions} from '@/services/CompetitionService';
-import {Competition} from '@/types';
+import { useEffect, useState } from 'react';
+import { fetchPublicCompetitions } from '@/services/CompetitionService';
+import { Competition } from '@/types';
 
 interface SelectActiveContestProps {
     onCompetitionSelect: (competitionId: number) => void;
 }
 
 export function SelectActiveContest({
-                                        onCompetitionSelect,
-                                    }: SelectActiveContestProps) {
-    const [activeCompetitions, setActiveCompetitions] = useState<Competition[]>(
-        []
-    );
+    onCompetitionSelect,
+}: SelectActiveContestProps) {
+    const [activeCompetitions, setActiveCompetitions] = useState<Competition[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [selectedCompetitionName, setSelectedCompetitionName] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchActiveContests = async () => {
             try {
-                const {data: competitions} = await fetchPublicCompetitions();
+                const { data: competitions } = await fetchPublicCompetitions();
+
+                if (!Array.isArray(competitions)) {
+                    throw new Error('Expected an array');
+                }
+
                 setActiveCompetitions(competitions);
                 const savedCompetitionName = localStorage.getItem('selectedCompetitionName');
                 if (savedCompetitionName) {
@@ -39,7 +42,6 @@ export function SelectActiveContest({
                         onCompetitionSelect(selectedCompetition.id);
                     }
                 }
-
             } catch (error: any) {
                 console.error('Error fetching active contests:', error);
                 setError('Failed to fetch contests');
@@ -63,7 +65,7 @@ export function SelectActiveContest({
     return (
         <Select onValueChange={handleSelect} value={selectedCompetitionName || ''}>
             <SelectTrigger>
-                <SelectValue placeholder='Selecteer wedstrijd'/>
+                <SelectValue placeholder='Selecteer wedstrijd' />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
