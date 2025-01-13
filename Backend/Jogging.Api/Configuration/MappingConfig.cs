@@ -14,6 +14,7 @@ using Jogging.Infrastructure.Models.SearchModels.Person;
 using Jogging.Infrastructure.Models.SearchModels.Registration;
 using Jogging.Infrastructure.Models.SearchModels.Result;
 using Jogging.Infrastructure2.Models;
+using Jogging.Infrastructure2.Models.Club;
 using Jogging.Rest.DTOs.AccountDtos.ConfirmDtos;
 using Jogging.Rest.DTOs.AccountDtos.PasswordDtos;
 using Jogging.Rest.DTOs.AccountDtos.ProfileDtos;
@@ -71,6 +72,8 @@ namespace Jogging.Api.Configuration
 
             CreateMap<ExtendedRegistration, RegistrationResponseDTO>().ReverseMap();
 
+            CreateMap<ClubEF, ClubDom>();
+            CreateMap<ClubDom, ClubEF>();
             CreateMap<SimpleClub, ClubDom>().ReverseMap();
             CreateMap<ExtendedClub, ClubDom>().ReverseMap();
             CreateMap<ClubDom, ClubResponseDTO>().ReverseMap();
