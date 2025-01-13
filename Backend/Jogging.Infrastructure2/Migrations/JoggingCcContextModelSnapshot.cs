@@ -31,6 +31,9 @@ namespace Jogging.Infrastructure2.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
+                    b.Property<int?>("PersonId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Role")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)")
@@ -38,6 +41,9 @@ namespace Jogging.Infrastructure2.Migrations
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
+
+                    b.HasIndex("PersonId")
+                        .IsUnique();
 
                     b.ToTable("Profile");
                 });
@@ -220,7 +226,6 @@ namespace Jogging.Infrastructure2.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConfirmationToken")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Email")
@@ -256,7 +261,6 @@ namespace Jogging.Infrastructure2.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PasswordResetToken")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int?>("SchoolId")
@@ -353,8 +357,7 @@ namespace Jogging.Infrastructure2.Migrations
 
                     b.Property<string>("Gender")
                         .HasMaxLength(10)
-                        .HasColumnType("varchar(10)")
-                        .HasDefaultValueSql("''");
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("Ibannumber")
                         .HasMaxLength(30)
@@ -375,9 +378,17 @@ namespace Jogging.Infrastructure2.Migrations
                     b.Property<Guid?>("UserId")
                         .HasColumnType("char(36)");
 
-                    b.ToTable((string)null);
+                    b.ToTable("Personviews");
+                });
 
-                    b.ToView("personview", (string)null);
+            modelBuilder.Entity("Jogging.Infrastructure2.Models.Account.ProfileEF", b =>
+                {
+                    b.HasOne("Jogging.Infrastructure2.Models.PersonEF", "Person")
+                        .WithOne("Profile")
+                        .HasForeignKey("Jogging.Infrastructure2.Models.Account.ProfileEF", "PersonId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Jogging.Infrastructure2.Models.PersonEF", b =>
@@ -412,6 +423,11 @@ namespace Jogging.Infrastructure2.Migrations
             modelBuilder.Entity("Jogging.Infrastructure2.Models.Club.ClubEF", b =>
                 {
                     b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("Jogging.Infrastructure2.Models.PersonEF", b =>
+                {
+                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }

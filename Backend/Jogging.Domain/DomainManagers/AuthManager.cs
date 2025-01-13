@@ -26,7 +26,7 @@ public class AuthManager {
         return loggedInPersonDom;
     }
 
-    public async Task<string> SignUpAsync(string email, string? password) {
+    public async Task<string> SignUpAsync(string email, string password, PersonDom personDom, bool sendConfirmEmail) {
         AuthenticationValidator.ValidateEmailInput(email);
 
         if (string.IsNullOrEmpty(password) || password.Length < 6) {
@@ -35,15 +35,15 @@ public class AuthManager {
 
         await CheckDuplicateEmailAddressAsync(email);
 
-        return await _authRepo.SignUpAsync(email, password);
+        return await _authRepo.SignUpAsync(personDom, password);
     }
 
-    public async Task<PersonDom> RegisterUserAsync(string email, string? password, PersonDom signedUpPersonDom, bool sendConfirmEmail) {
+    public async Task<PersonDom> RegisterUserAsync(string email, string password, PersonDom signedUpPersonDom, bool sendConfirmEmail) {
         if (string.IsNullOrEmpty(password)) {
             throw new ArgumentException("Password cannot be empty.");
         }
 
-        var userId = await SignUpAsync(email, password);
+        var userId = await SignUpAsync(email, password, signedUpPersonDom, sendConfirmEmail);
 
         signedUpPersonDom.Email = email;
         signedUpPersonDom.UserId = userId;
@@ -96,7 +96,7 @@ public class AuthManager {
         string? newEmail = updatedPerson.Email;
 
         if (string.IsNullOrWhiteSpace(oldEmail) && !string.IsNullOrWhiteSpace(newEmail)) {
-            string userId = await SignUpAsync(newEmail, null);
+            string userId = await SignUpAsync(newEmail, "defaultPassword123", updatedPerson, true);
 
             currentPerson.Email = newEmail;
             currentPerson.UserId = userId;

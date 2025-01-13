@@ -14,10 +14,12 @@ using Jogging.Infrastructure.Models.SearchModels.Person;
 using Jogging.Infrastructure.Models.SearchModels.Registration;
 using Jogging.Infrastructure.Models.SearchModels.Result;
 using Jogging.Infrastructure2.Models;
+using Jogging.Infrastructure2.Models.Account;
 using Jogging.Infrastructure2.Models.Club;
 using Jogging.Rest.DTOs.AccountDtos.ConfirmDtos;
 using Jogging.Rest.DTOs.AccountDtos.PasswordDtos;
 using Jogging.Rest.DTOs.AccountDtos.ProfileDtos;
+using Jogging.Rest.DTOs.AccountDtos.SignUpDtos;
 using Jogging.Rest.DTOs.AddressDtos;
 using Jogging.Rest.DTOs.AgeCategoryDtos;
 using Jogging.Rest.DTOs.ClubDtos;
@@ -30,13 +32,34 @@ using Jogging.Rest.DTOs.ResultDtos;
 using Jogging.Rest.DTOs.SchoolDtos;
 using Profile = Jogging.Infrastructure.Models.DatabaseModels.Account.Profile;
 
-namespace Jogging.Api.Configuration
-{
-    public class MappingConfig : AutoMapper.Profile
-    {
-        public MappingConfig()
-        {
+namespace Jogging.Api.Configuration {
+    public class MappingConfig : AutoMapper.Profile {
+        public MappingConfig() {
             // DATABASE MAPPING
+            CreateMap<SchoolDom, SchoolEF>().ReverseMap();
+            CreateMap<AddressDom, AddressEF>().ReverseMap();
+
+            CreateMap<PersonDom, PersonEF>()
+            .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
+            .ForMember(dest => dest.Ibannumber, opt => opt.MapFrom(src => src.IBANNumber))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()))
+            .ForMember(dest => dest.SchoolId, opt => opt.MapFrom(src => src.SchoolId))
+            .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.AddressId))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.ClubId, opt => opt.MapFrom(src => src.ClubId))
+            .ForMember(dest => dest.Club, opt => opt.MapFrom(src => src.Club))
+            .ForMember(dest => dest.Profile, opt => opt.MapFrom(src => src.Profile))
+            .ReverseMap();
+
+            CreateMap<AgeCategoryDom, AgeCategoryEF>().ReverseMap();
+            CreateMap<ClubDom, ClubEF>().ReverseMap();
+            CreateMap<CompetitionDom, CompetitionEF>().ReverseMap();
+            CreateMap<CompetitionPerCategoryDom, CompetitionPerCategoryEF>().ReverseMap();
+            CreateMap<RegistrationDom, RegistrationEF>().ReverseMap();
+            CreateMap<ResultDom, ResultEF>().ReverseMap();
+
             CreateMap<SimplePerson, PersonDom>().ReverseMap();
             CreateMap<AdvancedPerson, PersonDom>().ReverseMap();
             CreateMap<ExtendedPerson, PersonDom>().ReverseMap();
@@ -137,12 +160,10 @@ namespace Jogging.Api.Configuration
                 .ForMember(dest => dest.Paid, opt => opt.MapFrom(src => src.Paid))
                 .ForMember(dest => dest.PersonId, opt => opt.MapFrom(src => src.PersonId))
                 .ForMember(dest => dest.CompetitionId, opt => opt.MapFrom(src => src.CompetitionId))
-                .ForMember(dest => dest.CompetitionPerCategory, opt => opt.MapFrom(src => new CompetitionPerCategoryDom()
-                {
+                .ForMember(dest => dest.CompetitionPerCategory, opt => opt.MapFrom(src => new CompetitionPerCategoryDom() {
                     DistanceName = src.DistanceName
                 }))
-                .ForMember(dest => dest.Person, opt => opt.MapFrom(src => new PersonDom
-                {
+                .ForMember(dest => dest.Person, opt => opt.MapFrom(src => new PersonDom {
                     Id = src.PersonId,
                     LastName = src.LastName,
                     FirstName = src.FirstName,
@@ -152,8 +173,7 @@ namespace Jogging.Api.Configuration
                     AddressId = src.AddressId,
                     Gender = src.Gender,
                     UserId = src.UserId,
-                    Address = new AddressDom
-                    {
+                    Address = new AddressDom {
                         Id = src.AddressId,
                         Street = src.Street,
                         HouseNumber = src.HouseNumber,
@@ -161,6 +181,16 @@ namespace Jogging.Api.Configuration
                         ZipCode = src.ZipCode
                     }
                 }));
+
+            CreateMap<PersonRequestDTO, PersonDom>()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
+                .ForMember(dest => dest.IBANNumber, opt => opt.MapFrom(src => src.IBANNumber))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender));
+
+            CreateMap<SignUpRequestDTO, PersonDom>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
 
             CreateMap<ExtendedPersonSearch, PersonDom>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PersonId))
@@ -173,16 +203,14 @@ namespace Jogging.Api.Configuration
                 .ForMember(dest => dest.SchoolId, opt => opt.MapFrom(src => src.SchoolId))
                 .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.AddressId))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => new AddressDom()
-                {
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => new AddressDom() {
                     Id = src.AddressId,
                     Street = src.Street,
                     HouseNumber = src.HouseNumber,
                     City = src.City,
                     ZipCode = src.ZipCode
                 }))
-                .ForMember(dest => dest.Profile, opt => opt.MapFrom(src => new ProfileDom()
-                {
+                .ForMember(dest => dest.Profile, opt => opt.MapFrom(src => new ProfileDom() {
                     Id = src.UserId,
                     Role = src.Role
                 }));

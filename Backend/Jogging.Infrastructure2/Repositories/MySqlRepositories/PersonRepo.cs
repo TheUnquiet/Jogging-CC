@@ -5,9 +5,11 @@ using Jogging.Domain.Interfaces.RepositoryInterfaces;
 using Jogging.Domain.Models;
 using Jogging.Infrastructure2.Data;
 using Jogging.Infrastructure2.Models;
+using Jogging.Infrastructure2.Models.Club;
 using Jogging.Infrastructure2.Models.DatabaseModels.Address;
 using Jogging.Infrastructure2.Models.DatabaseModels.Person;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
@@ -71,11 +73,15 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try {
+                if (newPersonDom == null) {
+                    throw new ArgumentNullException(nameof(newPersonDom), "The input cannot be null.");
+                }
+
                 var address = await _context.Addresses
                     .FirstOrDefaultAsync(a =>
                         a.Street == newPersonDom.Address.Street &&
                         a.City == newPersonDom.Address.City)
-                ?? _context.Addresses.Add(_mapper.Map<AddressEF>(newPersonDom.Address)).Entity;
+                    ?? _context.Addresses.Add(_mapper.Map<AddressEF>(newPersonDom.Address)).Entity;
 
                 SchoolDom? school = null;
 
@@ -93,9 +99,20 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
                     }
                 }
 
-                var person = _mapper.Map<PersonEF>(newPersonDom);
-                person.AddressId = address.Id;
-                person.SchoolId = school?.Id;
+                var person = new PersonEF {
+                    FirstName = newPersonDom.FirstName,
+                    LastName = newPersonDom.LastName,
+                    BirthDate = newPersonDom.BirthDate,
+                    Ibannumber = newPersonDom.IBANNumber,
+                    Gender = newPersonDom.Gender.ToString(),
+                    UserId = Guid.TryParse(newPersonDom.UserId, out var userId) ? userId : (Guid?)null,
+                    SchoolId = school?.Id,
+                    AddressId = address.Id,
+                    Email = newPersonDom.Email,
+                    ClubId = newPersonDom.ClubId,
+                    Club = newPersonDom.Club != null ? _mapper.Map<ClubEF>(newPersonDom.Club) : null,
+                    PasswordHash = newPersonDom.Password
+                };
 
                 _context.People.Add(person);
                 await _context.SaveChangesAsync();
@@ -105,7 +122,8 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
                 return _mapper.Map<PersonDom>(person);
             } catch (Exception ex) {
                 await transaction.RollbackAsync();
-                throw new Exception("Something went wrong", ex);
+                Console.WriteLine($"Error during adding person: {ex.Message}");
+                throw new Exception("An error occurred while adding the person.", ex);
             }
         }
 

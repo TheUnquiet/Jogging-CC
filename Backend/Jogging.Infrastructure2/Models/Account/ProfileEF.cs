@@ -13,6 +13,11 @@ public partial class ProfileEF
     [Column("id")]
     public Guid Id { get; set; }
 
+    public int? PersonId { get; set; }
+
+    [ForeignKey("PersonId")]
+    public virtual PersonEF? Person { get; set; }
+
     [Column("role")]
     [StringLength(255)]
     public string? Role { get; set; }

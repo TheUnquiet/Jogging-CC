@@ -23,34 +23,76 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
         }
 
         public async Task<PersonDom> SignInAsync(string email, string password) {
-            var user = await _dbContext.People.FirstOrDefaultAsync(p => p.Email == email);
-            if (user == null) {
+            PersonEF personEF = await _dbContext.People
+                .AsNoTracking()
+                .Include(p => p.Profile)
+                .FirstOrDefaultAsync(p => p.Email.ToLower() == email.ToLower());
+
+            if (personEF == null) {
                 throw new AuthException("The given user information was incorrect.");
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash)) {
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, personEF.PasswordHash);
+            if (!isPasswordValid) {
                 throw new AuthException("The given user information was incorrect.");
             }
 
-            return _mapper.Map<PersonDom>(user);
+            PersonDom personDom = new PersonDom {
+                Id = personEF.Id,
+                FirstName = personEF.FirstName,
+                LastName = personEF.LastName,
+                Email = personEF.Email,
+                Password = password,
+                BirthDate = personEF.BirthDate,
+                Gender = !string.IsNullOrEmpty(personEF.Gender) ? personEF.Gender[0] : '\0',
+                IBANNumber = personEF.Ibannumber,
+                SchoolId = personEF.SchoolId,
+                AddressId = personEF.AddressId,
+                ClubId = personEF.ClubId,
+                UserId = personEF.UserId?.ToString(),
+                Profile = personEF.Profile != null ? new ProfileDom {
+                    Id = personEF.Profile.Id.ToString(),
+                    Role = personEF.Profile.Role,
+                    PersonId = personEF.Profile.PersonId
+                } : null,
+            };
+
+            return personDom;
         }
 
-        public async Task<string> SignUpAsync(string email, string? password) {
+        public async Task<string> SignUpAsync(PersonDom personDom, string password) {
             if (string.IsNullOrEmpty(password)) {
                 password = Guid.NewGuid().ToString().Substring(0, 8);
             }
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 
-            var person = new PersonEF {
-                Email = email,
-                PasswordHash = passwordHash
+            var personEF = new PersonEF {
+                FirstName = personDom.FirstName,
+                LastName = personDom.LastName,
+                BirthDate = personDom.BirthDate,
+                Email = personDom.Email,
+                Ibannumber = personDom.IBANNumber,
+                Gender = personDom.Gender.ToString(),
+                PasswordHash = passwordHash,
+                SchoolId = personDom.SchoolId,
+                AddressId = personDom.AddressId,
+                ClubId = personDom.ClubId
             };
 
-            _dbContext.People.Add(person);
+            _dbContext.People.Add(personEF);
             await _dbContext.SaveChangesAsync();
 
-            return person.Id.ToString(); 
+            var profileEF = new ProfileEF {
+                Id = Guid.NewGuid(),
+                Role = "Admin",
+                PersonId = personEF.Id
+            };
+
+            _dbContext.Profiles.Add(profileEF);
+            await _dbContext.SaveChangesAsync();
+
+            return personEF.Id.ToString();
         }
 
         public async Task ChangePassword(PasswordChangeDom passwordChangeInfo) {
