@@ -4,6 +4,7 @@ using Jogging.Domain.Configuration;
 using Jogging.Domain.DomainManagers;
 using Jogging.Domain.Helpers;
 using Jogging.Domain.Interfaces.RepositoryInterfaces;
+using Jogging.Domain.Services;
 using Jogging.Infrastructure2.Data;
 using Jogging.Infrastructure2.Repositories.MySqlRepositories;
 using Jogging.Rest.Controllers;

@@ -2,6 +2,7 @@
 using Jogging.Domain.DomainManagers;
 using Jogging.Domain.Exceptions;
 using Jogging.Domain.Models;
+using Jogging.Domain.Services;
 using Jogging.Rest.DTOs.ClubDtos;
 using Jogging.Rest.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@ namespace Jogging.Rest.Controllers {
         private readonly ClubManager _clubManager;
         private readonly IMapper _mapper;
         private readonly ILogger<ClubController> _logger;
-        private readonly BlobStorageController _blobController;
+        private readonly BlobStorageService _blobController;
 
         #endregion Props
 
@@ -48,7 +49,6 @@ namespace Jogging.Rest.Controllers {
         }
 
         [HttpGet("{clubId:int}")]
-        [Authorize]
         public async Task<ActionResult<ClubResponseDTO>> Get(int clubId) {
             try {
                 var club = await _clubManager.GetByIdAsync(clubId);
@@ -94,6 +94,7 @@ namespace Jogging.Rest.Controllers {
                     createdClub.Logo = $"https://nieuwetechclubs.blob.core.windows.net/clubs/{clubRequest.Logo.FileName}";
                 }
 
+                await _clubManager.CreateAsync(createdClub);
                 return CreatedAtAction(nameof(Get), new { clubId = createdClub.Id }, _mapper.Map<ClubResponseDTO>(createdClub));
             } catch (Exception exception) {
                 _logger.LogError(exception, "An error occurred in Create.");
@@ -106,7 +107,6 @@ namespace Jogging.Rest.Controllers {
         #region PUT
 
         [HttpPut("{clubId:int}")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ClubResponseDTO>> UpdateClub(int clubId, [FromBody] ClubRequestDTO clubRequest) {
             try {
                 var updatedClub = await _clubManager.UpdateAsync(clubId, _mapper.Map<ClubDom>(clubRequest));
@@ -122,7 +122,6 @@ namespace Jogging.Rest.Controllers {
         #region DELETE
 
         [HttpDelete("{clubId:int}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteClub(int clubId) {
             try {
                 await _clubManager.DeleteAsync(clubId);
