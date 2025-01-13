@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Jogging.Domain.DomainManagers;
 using Jogging.Domain.Exceptions;
-using Jogging.Domain.Helpers;
 using Jogging.Domain.Models;
 using Jogging.Domain.Services;
 using Jogging.Rest.DTOs.ClubDtos;
@@ -49,7 +48,7 @@ namespace Jogging.Rest.Controllers {
             _clubManager = clubManager;
             _mapper = mapper;
             _logger = logger;
-            _blobController = controller;
+            _blobController = blobController;
         }
 
         #endregion CTor
@@ -59,10 +58,8 @@ namespace Jogging.Rest.Controllers {
         [HttpGet]
         public async Task<ActionResult<PagedList<ClubResponseDTO>>> GetAll([FromQuery] QueryStringParameters parameters) {
             try {
-                var clubs = await _clubManager.GetAllAsync(parameters);
-                ControllerUtil.AddPagination(clubs, Response);
-
-                return Ok(_mapper.Map<PagedList<ClubDom>, PagedList<ClubResponseDTO>>(clubs));
+                var clubs = await _clubManager.GetAllAsync();
+                return Ok(_mapper.Map<IEnumerable<ClubResponseDTO>>(clubs));
             } catch (Exception exception) {
                 _logger.LogError(exception, "An error occurred in GetAll.");
                 return InternalServerError(exception, _logger);
@@ -84,6 +81,22 @@ namespace Jogging.Rest.Controllers {
             }
         }
 
+        [HttpGet("{clubId:int}/members")]
+        [Authorize]
+        public async Task<ActionResult<ClubResponseDTO>> GetClubByIdWithMembers(int clubId) {
+            try {
+                var club = await _clubManager.GetByIdWithMembersAsync(clubId);
+                if (club == null) {
+                    return NotFound($"Club with id {clubId} was not found.");
+                }
+
+                return Ok(_mapper.Map<ClubResponseDTO>(club));
+            } catch (Exception exception) {
+                _logger.LogError(exception, "An error occurred in GetClubByIdWithMembers.");
+                return InternalServerError(exception, _logger);
+            }
+        }
+
         #endregion GET
 
         #region POST
@@ -97,18 +110,14 @@ namespace Jogging.Rest.Controllers {
                 var createdClub = _mapper.Map<ClubDom>(clubRequest);
 
 
-                // Upload the logo image if provided
-                if (clubRequest.Logo != null)
-                {
+                if (clubRequest.Logo != null) {
                     await _blobController.Upload(clubRequest.Logo);
                     createdClub.Logo = $"https://nieuwetechclubs.blob.core.windows.net/clubs/{clubRequest.Logo.FileName}";
                 }
 
                 await _clubManager.CreateAsync(createdClub);
                 return CreatedAtAction(nameof(Get), new { clubId = createdClub.Id }, _mapper.Map<ClubResponseDTO>(createdClub));
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 _logger.LogError(exception, "An error occurred in Create.");
                 return InternalServerError(exception, _logger);
             }

@@ -7,6 +7,7 @@ using Jogging.Domain.Interfaces.RepositoryInterfaces;
 using Jogging.Domain.Services;
 using Jogging.Infrastructure2.Data;
 using Jogging.Infrastructure2.Repositories.MySqlRepositories;
+using Jogging.Rest.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Sinks.Discord;
