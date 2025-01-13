@@ -56,6 +56,19 @@ namespace Jogging.Rest.Controllers {
             }
         }
 
+        [HttpPost("check-email")]
+        public async Task<IActionResult> CheckDuplicateEmailAsync([FromBody] EmailRequestDTO emailRequestDto) {
+            try {
+                await _authManager.CheckDuplicateEmailAddressAsync(emailRequestDto.Email);
+
+                return Created();
+            } catch (DuplicateEmailException exception) {
+                return Conflict(exception.Message);
+            } catch (Exception exception) {
+                return InternalServerError(exception, _logger);
+            }
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult<PersonResponseDTO>> SignInAsync([FromBody] LogInRequestDTO person) {
             try {
@@ -165,19 +178,6 @@ namespace Jogging.Rest.Controllers {
                 await _authManager.ResetPasswordAsync(_mapper.Map<PasswordResetDom>(passwordResetRequestDto));
 
                 return Created("Password reset successfully");
-            } catch (Exception exception) {
-                return InternalServerError(exception, _logger);
-            }
-        }
-
-        [HttpPost("check-email")]
-        public async Task<IActionResult> CheckDuplicateEmailAsync([FromBody] EmailRequestDTO emailRequestDto) {
-            try {
-                await _authManager.CheckDuplicateEmailAddressAsync(emailRequestDto.Email);
-
-                return Created();
-            } catch (DuplicateEmailException exception) {
-                return Conflict(exception.Message);
             } catch (Exception exception) {
                 return InternalServerError(exception, _logger);
             }
