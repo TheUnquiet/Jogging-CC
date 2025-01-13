@@ -1,8 +1,10 @@
 ﻿using Azure.Storage.Blobs;
 using Jogging.Api.Configuration;
 using Jogging.Domain.Configuration;
+using Jogging.Domain.DomainManagers;
 using Jogging.Domain.Helpers;
 using Jogging.Domain.Interfaces.RepositoryInterfaces;
+using Jogging.Domain.Services;
 using Jogging.Infrastructure2.Data;
 using Jogging.Infrastructure2.Repositories.MySqlRepositories;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +41,9 @@ internal class Program
             builder.Services.AddSingleton<CustomMemoryCache>();
             builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.GetConnectionString("StorageAccount")));
             builder.Services.AddScoped<IResultRepo, ResultRepo>();
+            builder.Services.AddScoped<IClubRepo, ClubRepo>();
+            builder.Services.AddScoped<ClubManager>();
+            builder.Services.AddScoped<BlobStorageService>();
 
             builder.Services.AddMemoryCache();
 

@@ -33,6 +33,7 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories
             }
 
             await _context.Clubs.AddAsync(club);
+            await _context.SaveChangesAsync();
             return newClub;
         }
 

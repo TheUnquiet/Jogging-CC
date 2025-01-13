@@ -95,6 +95,8 @@ namespace Jogging.Api.Configuration {
 
             CreateMap<ExtendedRegistration, RegistrationResponseDTO>().ReverseMap();
 
+            CreateMap<ClubEF, ClubDom>();
+            CreateMap<ClubDom, ClubEF>();
             CreateMap<SimpleClub, ClubDom>().ReverseMap();
             CreateMap<ExtendedClub, ClubDom>().ReverseMap();
             CreateMap<ClubDom, ClubResponseDTO>().ReverseMap();
