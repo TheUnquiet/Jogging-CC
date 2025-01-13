@@ -60,9 +60,9 @@ namespace Jogging.Rest.Controllers {
         public async Task<ActionResult<PersonResponseDTO>> SignInAsync([FromBody] LogInRequestDTO person) {
             try {
                 var success = await _authManager.SignInAsync(person.Email, person.Password);
-                if (success?.Id != null && success.UserId != null && success.Profile?.Role != null) {
+                if (success != null) {
                     var jwtToken =
-                        JwtTokenUtil.Generate(_configuration, success.Id, success.UserId, success.Profile.Role);
+                        JwtTokenUtil.Generate(_configuration, success.Id, success.Profile.Role);
 
                     _cookieService.AddJwtCookie(Response, Request, jwtToken);
 
@@ -95,7 +95,7 @@ namespace Jogging.Rest.Controllers {
                 var personDom = _mapper.Map<PersonDom>(signUpRequestDto.Person);
                 personDom.Email = signUpRequestDto.Email;
 
-                await _authManager.RegisterUserAsync(signUpRequestDto.Email, signUpRequestDto.Password, personDom, sendConfirmEmail: true);
+                await _authManager.RegisterUserAsync(signUpRequestDto.Email, signUpRequestDto.Password, personDom, sendConfirmEmail: false);
                 return Created();
             } catch (PasswordException exception) {
                 return BadRequest(exception.Message);

@@ -5,6 +5,7 @@ using Jogging.Domain.Interfaces.RepositoryInterfaces;
 using Jogging.Domain.Models;
 using Jogging.Infrastructure2.Data;
 using Jogging.Infrastructure2.Models;
+using Jogging.Infrastructure2.Models.Club;
 using Jogging.Infrastructure2.Models.DatabaseModels.Address;
 using Jogging.Infrastructure2.Models.DatabaseModels.Person;
 using Microsoft.EntityFrameworkCore;
@@ -98,9 +99,20 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
                     }
                 }
 
-                var person = _mapper.Map<PersonEF>(newPersonDom);
-                person.AddressId = address.Id;
-                person.SchoolId = school?.Id;
+                var person = new PersonEF {
+                    FirstName = newPersonDom.FirstName,
+                    LastName = newPersonDom.LastName,
+                    BirthDate = newPersonDom.BirthDate,
+                    Ibannumber = newPersonDom.IBANNumber,
+                    Gender = newPersonDom.Gender.ToString(),
+                    UserId = Guid.TryParse(newPersonDom.UserId, out var userId) ? userId : (Guid?)null,
+                    SchoolId = school?.Id,
+                    AddressId = address.Id,
+                    Email = newPersonDom.Email,
+                    ClubId = newPersonDom.ClubId,
+                    Club = newPersonDom.Club != null ? _mapper.Map<ClubEF>(newPersonDom.Club) : null,
+                    PasswordHash = newPersonDom.Password
+                };
 
                 _context.People.Add(person);
                 await _context.SaveChangesAsync();
@@ -110,11 +122,9 @@ namespace Jogging.Infrastructure2.Repositories.MySqlRepositories {
                 return _mapper.Map<PersonDom>(person);
             } catch (Exception ex) {
                 await transaction.RollbackAsync();
+                Console.WriteLine($"Error during adding person: {ex.Message}");
                 throw new Exception("An error occurred while adding the person.", ex);
-            } finally {
             }
-
-            throw new InvalidOperationException("An unexpected error occurred. The person could not be added.");
         }
 
         public async Task<(PersonDom, PersonDom, bool shouldSendEmail)> UpdateAsync(int personId, PersonDom updatedPerson) {

@@ -80,22 +80,23 @@ public partial class JoggingCcContext : DbContext
 
             entity.Property(e => e.Gender).HasDefaultValueSql("''");
 
-                entity.HasOne(p => p.Club)
-                      .WithMany(c => c.Members)
-                      .HasForeignKey(p => p.ClubId)
-                      .OnDelete(DeleteBehavior.SetNull);
-        });
+            entity.HasOne(p => p.Club)
+                  .WithMany(c => c.Members)
+                  .HasForeignKey(p => p.ClubId)
+                  .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Personview>(entity =>
-        {
-            entity.ToView("personview");
-
-            entity.Property(e => e.Gender).HasDefaultValueSql("''");
+            entity.HasOne(p => p.Profile)
+                  .WithOne(pr => pr.Person)
+                  .HasForeignKey<ProfileEF>(pr => pr.PersonId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<ProfileEF>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.Property(e => e.PersonId)
+                  .IsRequired(false);
         });
 
         modelBuilder.Entity<RegistrationEF>(entity =>

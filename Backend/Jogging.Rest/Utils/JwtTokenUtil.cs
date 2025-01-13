@@ -10,16 +10,19 @@ namespace Jogging.Rest.Utils;
 
 public static class JwtTokenUtil
 {
-    public static string Generate(JwtConfiguration configuration, int userId, string guid, string role)
-    {
+    public static string Generate(JwtConfiguration configuration, int userId, string role) {
+        var guid = Guid.NewGuid().ToString();
+
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.Key));
         var signInCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
+
         var claims = new[]
         {
-            new Claim("UserId", userId.ToString()),
-            new Claim("Guid", guid),
-            new Claim(ClaimTypes.Role, role)
-        };
+        new Claim("UserId", userId.ToString()),
+        new Claim("Guid", guid),
+        new Claim(ClaimTypes.Role, role)
+    };
+
         var securityToken = new JwtSecurityToken(
             expires: DateTime.UtcNow.AddDays(30),
             issuer: configuration.Issuer,
@@ -27,6 +30,7 @@ public static class JwtTokenUtil
             signingCredentials: signInCredentials,
             claims: claims
         );
+
         var tokenString = new JwtSecurityTokenHandler()
             .WriteToken(securityToken);
 
